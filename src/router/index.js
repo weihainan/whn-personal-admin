@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -15,21 +15,29 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: resolve => require(['../components/element/ReadMe.vue'], resolve),
+          component: resolve => require(['../components/ReadMe.vue'], resolve),
         },
         {
           path: '/readme',
-          component: resolve => require(['../components/element/ReadMe.vue'], resolve),
+          component: resolve => require(['../components/ReadMe.vue'], resolve),
         },
         {
           path: '/outlinks',
-          component: resolve => require(['../components/element/OutLinks.vue'], resolve),
+          component: resolve => require(['../components/OutLinks.vue'], resolve),
+        },
+        {
+          path: '/useguide',
+          component: resolve => require(['../components/elements/UseGuide.vue'], resolve),
         },
       ]
     },
     {
       path: '/login',
       component: resolve => require(['../components/common/Login.vue'], resolve),
+    },
+    {
+      path: '*',
+      redirect: '/login'
     },
   ]
 })

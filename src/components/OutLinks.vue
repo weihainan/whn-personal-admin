@@ -1,6 +1,6 @@
 <template>
 
-  <div id="wapper">
+  <div id="outlinks-wrapper">
     <ul id="outlinks">
       <li><a href="https://www.baidu.com" target="_blank">百 度</a></li>
       <li><a href="https://www.google.com.hk" target="_blank">谷 歌</a></li>
@@ -15,6 +15,7 @@
       <li><a href="http://element.eleme.io/#/zh-CN/component/installation" target="_blank">Element-UI</a></li>
       <li><a href="https://github.com/weihainan" target="_blank">GitHub</a></li>
       <li><a href="http://mvnrepository.com" target="_blank">MvnRepository</a></li>
+      <li><a href="http://tool.oschina.net/encode" target="_blank">Html-Encode</a></li>
     </ul>
 
   </div>
@@ -27,7 +28,7 @@
 
 </script>
 
-<style scope>
+<style scoped>
 
   #outlinks     {
     font-size: larger;
