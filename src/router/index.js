@@ -29,6 +29,22 @@ export default new Router({
           path: '/useguide',
           component: resolve => require(['../components/elements/UseGuide.vue'], resolve),
         },
+        {
+          path: '/chargeup',
+          component: resolve => require(['../components/Charge.vue'], resolve),
+        },
+        {
+          path: '/assignment',
+          component: resolve => require(['../components/Assignment.vue'], resolve),
+        },
+        {
+          path: '/adminmanager',
+          component: resolve => require(['../components/AdminManager.vue'], resolve),
+        },
+        {
+          path: '/labelmanager',
+          component: resolve => require(['../components/LabelManager.vue'], resolve),
+        },
       ]
     },
     {

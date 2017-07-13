@@ -25,7 +25,7 @@
       return {
         items: [
           {
-            icon: 'el-icon-setting',
+            icon: 'el-icon-check',
             index: 'readme',
             title: '自述'
           },
@@ -54,14 +54,29 @@
                 title: '记账功能'
               },
               {
-                index: 'todolist',
+                index: 'assignment',
                 title: '待办任务'
               }
             ]
           },
           {
-            icon: 'el-icon-share',
+            icon: 'el-icon-setting',
             index: '4',
+            title: '系统管理',
+            subs: [
+              {
+                index: 'labelmanager',
+                title: '记账标签'
+              },
+              {
+                index: 'adminmanager',
+                title: '管理用户'
+              }
+            ]
+          },
+          {
+            icon: 'el-icon-share',
+            index: '5',
             title: '外部链接',
             index: 'outlinks'
           },
