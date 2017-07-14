@@ -42,44 +42,11 @@
         const self = this;
         self.$refs[formName].validate((valid) => {
           if (valid) {
-            let self = this;
-            let login_url = 'http://localhost:9088/v0.1/personal/admins/login';
-            self.$axios.post(login_url, self.ruleForm).then((res) => {
-              sessionStorage.setItem('logined_admin', JSON.stringify(res.data));
-              self.$store.commit('setAdmin', {admin: res.data})
+            self.$store.dispatch('adminLogin', {data: self.ruleForm, vm: self});
+            if (sessionStorage.getItem('loginedAdmin') != null) {
               self.$router.push('/home');
-            }).catch(error => {
-              if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-                self.$message({
-                  showClose: true,
-                  message: error.response.data.message,
-                  type: 'error',
-                  duration: 2000,
-                });
-              } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
-                self.$message({
-                  showClose: true,
-                  message: '服务端无响应.',
-                  type: 'error',
-                  duration: 2000,
-                });
-              } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-              }
-              console.log(error.config);
-            });
+            }
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
@@ -87,8 +54,8 @@
     },
     mounted (){
       // 检查是否有用户登录 直接到首页
-      let logined_admin = sessionStorage.getItem('logined_admin');
-      if (logined_admin != null) {
+      let loginedAdmin = sessionStorage.getItem('loginedAdmin');
+      if (loginedAdmin != null) {
         this.$router.push('/home');
       }
     }

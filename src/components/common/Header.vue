@@ -5,7 +5,7 @@
       <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
                     <img class="user-logo" src="../../../static/img/img.jpg">
-                    {{getAdmin.name}}
+                    {{admin.name}}
                 </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="loginout">退出</el-dropdown-item>
@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapState} from 'vuex'
   export default {
     data() {
       return {
@@ -23,14 +23,14 @@
       }
     },
     computed: {
-      ...mapGetters([
-        'getAdmin'
-      ])
+      ...mapState({
+        admin: state => state.loginedAdmin
+      })
     },
     methods: {
       handleCommand(command) {
         if (command == 'loginout') {
-          sessionStorage.removeItem('logined_admin')
+          this.$store.dispatch('adminLoginOut');
           this.$router.push('/login');
         }
       }
