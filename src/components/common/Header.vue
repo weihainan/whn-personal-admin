@@ -4,8 +4,8 @@
     <div class="user-info">
       <el-dropdown trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
-                    <!--<img class="user-logo" src="../../../static/img/img.jpg">-->
-                    {{username}}
+                    <img class="user-logo" src="../../../static/img/img.jpg">
+                    {{getAdmin.name}}
                 </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="loginout">退出</el-dropdown-item>
@@ -15,6 +15,7 @@
   </div>
 </template>
 <script>
+  import {mapGetters} from 'vuex'
   export default {
     data() {
       return {
@@ -22,10 +23,9 @@
       }
     },
     computed: {
-      username(){
-        let logined_admin = sessionStorage.getItem('logined_admin');
-        return logined_admin ? JSON.parse(logined_admin).name : this.name;
-      }
+      ...mapGetters([
+        'getAdmin'
+      ])
     },
     methods: {
       handleCommand(command) {

@@ -45,8 +45,8 @@
             let self = this;
             let login_url = 'http://localhost:9088/v0.1/personal/admins/login';
             self.$axios.post(login_url, self.ruleForm).then((res) => {
-              console.log(JSON.stringify(res));
               sessionStorage.setItem('logined_admin', JSON.stringify(res.data));
+              self.$store.commit('setAdmin', {admin: res.data})
               self.$router.push('/home');
             }).catch(error => {
               if (error.response) {
@@ -66,6 +66,12 @@
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                 // http.ClientRequest in node.js
                 console.log(error.request);
+                self.$message({
+                  showClose: true,
+                  message: '服务端无响应.',
+                  type: 'error',
+                  duration: 2000,
+                });
               } else {
                 // Something happened in setting up the request that triggered an Error
                 console.log('Error', error.message);
