@@ -21,16 +21,16 @@
         name: 'linxin'
       }
     },
-    computed:{
+    computed: {
       username(){
-        let username = localStorage.getItem('ms_username');
-        return username ? username : this.name;
+        let logined_admin = sessionStorage.getItem('logined_admin');
+        return logined_admin ? JSON.parse(logined_admin).name : this.name;
       }
     },
-    methods:{
+    methods: {
       handleCommand(command) {
-        if(command == 'loginout'){
-          localStorage.removeItem('ms_username')
+        if (command == 'loginout') {
+          sessionStorage.removeItem('logined_admin')
           this.$router.push('/login');
         }
       }
@@ -47,18 +47,21 @@
     line-height: 70px;
     color: #fff;
   }
-  .header .logo{
+
+  .header .logo {
     float: left;
-    width:250px;
+    width: 250px;
     text-align: center;
   }
+
   .user-info {
     float: right;
     padding-right: 50px;
     font-size: 16px;
     color: #fff;
   }
-  .user-info .el-dropdown-link{
+
+  .user-info .el-dropdown-link {
     position: relative;
     display: inline-block;
     padding-left: 50px;
@@ -66,15 +69,17 @@
     cursor: pointer;
     vertical-align: middle;
   }
-  .user-info .user-logo{
+
+  .user-info .user-logo {
     position: absolute;
-    left:0;
-    top:15px;
-    width:40px;
-    height:40px;
+    left: 0;
+    top: 15px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
   }
-  .el-dropdown-menu__item{
+
+  .el-dropdown-menu__item {
     text-align: center;
   }
 </style>

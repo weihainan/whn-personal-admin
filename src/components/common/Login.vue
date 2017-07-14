@@ -3,8 +3,8 @@
     <div class="ms-title">Weihainan Personal System</div>
     <div class="ms-login">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-        <el-form-item prop="username">
-          <el-input v-model="ruleForm.username" placeholder="username"></el-input>
+        <el-form-item prop="name">
+          <el-input v-model="ruleForm.id" placeholder="admin id"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input type="password" placeholder="password" v-model="ruleForm.password"
@@ -13,7 +13,7 @@
         <div class="login-btn">
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
         </div>
-        <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p>
+        <p style="font-size:12px;line-height:30px;color:#999;">Tips : 管理员账号和密码为后台设置。</p>
       </el-form>
     </div>
   </div>
@@ -24,11 +24,11 @@
     data: function () {
       return {
         ruleForm: {
-          username: '',
+          id: '',
           password: ''
         },
         rules: {
-          username: [
+          id: [
             {required: true, message: '请输入用户名', trigger: 'blur'}
           ],
           password: [
@@ -42,8 +42,36 @@
         const self = this;
         self.$refs[formName].validate((valid) => {
           if (valid) {
-            localStorage.setItem('ms_username', self.ruleForm.username);
-            self.$router.push('/home');
+            let self = this;
+            let login_url = 'http://localhost:9088/v0.1/personal/admins/login';
+            self.$axios.post(login_url, self.ruleForm).then((res) => {
+              console.log(JSON.stringify(res));
+              sessionStorage.setItem('logined_admin', JSON.stringify(res.data));
+              self.$router.push('/home');
+            }).catch(error => {
+              if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+                self.$message({
+                  showClose: true,
+                  message: error.response.data.message,
+                  type: 'error',
+                  duration: 2000,
+                });
+              } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+              } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+              }
+              console.log(error.config);
+            });
           } else {
             console.log('error submit!!');
             return false;
@@ -53,9 +81,8 @@
     },
     mounted (){
       // 检查是否有用户登录 直接到首页
-      let username = localStorage.getItem('ms_username');
-      console.log(username)
-      if(username != null){
+      let logined_admin = sessionStorage.getItem('logined_admin');
+      if (logined_admin != null) {
         this.$router.push('/home');
       }
     }

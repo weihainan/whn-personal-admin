@@ -7,7 +7,7 @@
     </el-breadcrumb>
 
     <div class="main">
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="账目表" name="first">
           <el-button type="primary" @click="dialogFormVisible = true">记一笔</el-button>
         </el-tab-pane>
@@ -53,6 +53,9 @@
         dialogFormVisible: false,
         labelPosition: 'left',
         formLabelWidth: '120px',
+        disbursements:'disbursements',
+        receipts:'receipts',
+
         chargeForm: {
           amount: 0.00,
           type: 'disbursements',
