@@ -7,10 +7,14 @@ Vue.use(Vuex);
 
 const state = {
   loginedAdmin: JSON.parse(sessionStorage.getItem('loginedAdmin')) || {},
+  chargeLabelList: {total: 0, items: []},
 };
 
 const getters = {
   getAdmin: (state) => state.loginedAdmin,
+  auth:(state) =>{
+    return state.loginedAdmin.id + '-' + state.loginedAdmin.token;
+  }
 };
 
 export default new Vuex.Store({

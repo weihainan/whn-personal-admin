@@ -3,6 +3,9 @@ import axios from 'axios'
 
 const baseUrl = 'http://localhost:9088'
 const loginUrl = baseUrl + '/v0.1/personal/admins/login';
+const chargeLabelListUrl = baseUrl + '/v0.1/personal/charge_labels';
+const addChargeLabelUrl = baseUrl + '/v0.1/personal/charge_labels';
+const deleteChargeLabelUrl = baseUrl + '/v0.1/personal/charge_labels/';
 
 export default {
   adminLogin({commit}, params) {
@@ -29,5 +32,46 @@ export default {
   },
   adminLoginOut  ({commit}) {
     commit(types.ADMIN_LOGIN_OUT)
+  },
+
+  chargeLabelList({commit}, params){
+    let config = {
+      //baseURL: 'https://some-domain.com/api/',
+      timeout: 3000,
+      headers: {'Authorization': params.vm.$store.getters.auth}
+    };
+    let url = chargeLabelListUrl + '?page=' + params.page + '&size=' + params.size;
+    axios.get(url, config).then((res) => {
+      commit(types.CHARGE_LABEL_LIST, res.data)
+    }).catch(error => {
+      params.vm.$message.error("发现错误.");
+    });
+  },
+
+  deleteChargeLabel({commit}, params){
+    let config = {
+      //baseURL: 'https://some-domain.com/api/',
+      timeout: 3000,
+      headers: {'Authorization': params.vm.$store.getters.auth}
+    };
+    let url = deleteChargeLabelUrl + params.id;
+    axios.delete(url, config).then((res) => {
+      //commit(types.CHARGE_LABEL_LIST, res.data)
+    }).catch(error => {
+      params.vm.$message.error("发现错误.");
+    });
+  },
+  addChargeLabel({commit}, params){
+    let config = {
+      //baseURL: 'https://some-domain.com/api/',
+      timeout: 3000,
+      headers: {'Authorization': params.vm.$store.getters.auth}
+    };
+    let url = deleteChargeLabelUrl;
+    axios.post(url, params.data, config).then((res) => {
+      //commit(types.CHARGE_LABEL_LIST, res.data)
+    }).catch(error => {
+      params.vm.$message.error("发现错误.");
+    });
   },
 }

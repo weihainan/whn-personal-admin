@@ -1,6 +1,11 @@
 <template>
 
   <div id="outlinks-wrapper">
+
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item>外部链接</el-breadcrumb-item>
+    </el-breadcrumb>
+
     <ul id="outlinks">
       <li><a href="https://www.baidu.com" target="_blank">百 度</a></li>
       <li><a href="https://www.google.com.hk" target="_blank">谷 歌</a></li>
@@ -30,11 +35,12 @@
 
 <style scoped>
 
-  #outlinks     {
+  #outlinks {
+    margin: 10px;
     font-size: larger;
   }
 
-  #outlinks ul{
+  #outlinks ul {
     list-style-type: none;
     padding: 10px;
     margin: 10px;

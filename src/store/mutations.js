@@ -9,4 +9,8 @@ export default {
     sessionStorage.removeItem('loginedAdmin');
     state.loginedAdmin = null;
   },
+
+  [types.CHARGE_LABEL_LIST] (state, pageItems) {
+    state.chargeLabelList = pageItems;
+  },
 };
