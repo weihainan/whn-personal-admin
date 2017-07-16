@@ -9,7 +9,7 @@
 
       <el-button type="primary" @click="dialogFormVisible = true">添加标签</el-button>
 
-      <el-table :data="content.items" stripe border>
+      <el-table :data="chargeLabelList.items" stripe border>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="mark" label="备注"></el-table-column>
         <el-table-column label="操作">
@@ -18,6 +18,10 @@
           </template>
         </el-table-column>
       </el-table>
+      <p></p>
+      <el-pagination style="float:right;"
+                     layout="total, prev, pager, next, jumper" :total="chargeLabelList.total" :page-size="size"
+                     @current-change="handleCurrentChange"></el-pagination>
     </div>
     <el-dialog title="新账目" :visible.sync="dialogFormVisible">
       <el-form :model="chargeForm" :label-position="labelPosition">
@@ -37,14 +41,15 @@
 </template>
 
 <script>
+
+  import {mapState, mapMutations} from 'vuex'
+
   export default{
     data(){
       let data = {
         dialogFormVisible: false,
-        content: {
-          items: [],
-          total: 0,
-        },
+        size: 10,
+        currentPage: 1,
         empty: {
           name: '',
           mark: '',
@@ -53,10 +58,15 @@
       return data;
     },
     methods: {
-      deleteRow(index) {
-        let row = this.content.items[index];
-        this.$store.dispatch('deleteChargeLabel', {id: row.id, vm: this});
-        this.$store.dispatch('chargeLabelList', {page: 0, size: 20, vm: this,});
+      async deleteRow(index) {
+        let row = this.$store.state.chargeLabelList.items[index];
+        if (!row) {
+          this.initData(this.currentPage, this.size);
+        }
+        await this.$store.dispatch('deleteChargeLabel', {id: row.id, vm: this});
+        setTimeout(function () {
+          this.initData(this.currentPage, this.size);
+        }.bind(this), 600);
       },
       cancelChargeForm(){
         this.empty = {
@@ -65,23 +75,35 @@
         };
         this.dialogFormVisible = false;
       },
-      submitChargeForm(){
-        this.$store.dispatch('addChargeLabel', {data:this.empty, vm: this});
+      async submitChargeForm(){
+        await this.$store.dispatch('addChargeLabel', {data: this.empty, vm: this});
         this.empty = {
           name: '',
           mark: '',
         };
-        this.$store.dispatch('chargeLabelList', {page: 0, size: 20, vm: this,});
         this.dialogFormVisible = false;
+        setTimeout(function () {
+          this.initData(this.currentPage, this.size);
+        }.bind(this), 800);
+      },
+      handleCurrentChange(page){
+        this.currentPage = page;
+        this.initData(this.currentPage, this.size)
+      },
+      initData(pageValue, sizeValue){
+        this.$store.dispatch('chargeLabelList', {page: pageValue - 1, size: sizeValue, vm: this,});
       },
     },
     components: {},
     mounted(){
       // 在这发起后端请求，拿回数据，配合路由钩子做一些事情
-      this.$store.dispatch('chargeLabelList',
-        {page: 0, size: 20, vm: this,});
-      this.content = this.$store.state.chargeLabelList
-    }
+      this.initData(this.currentPage, this.size)
+    },
+    computed: {
+      ...mapState([
+        'chargeLabelList'
+      ]),
+    },
   }
 </script>
 

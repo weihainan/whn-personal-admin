@@ -43,9 +43,11 @@
         self.$refs[formName].validate((valid) => {
           if (valid) {
             self.$store.dispatch('adminLogin', {data: self.ruleForm, vm: self});
-            if (sessionStorage.getItem('loginedAdmin') != null) {
-              self.$router.push('/home');
-            }
+            setTimeout(function () {
+              if (sessionStorage.getItem('loginedAdmin') != null) {
+                self.$router.push('/home');
+              }
+            }.bind(this), 800);
           } else {
             return false;
           }

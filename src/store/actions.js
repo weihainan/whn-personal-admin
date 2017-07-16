@@ -18,7 +18,12 @@ export default {
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
-        params.vm.$message.error(error.response.data.message);
+        params.vm.$message({
+          showClose: true,
+          message: error.response.data.message,
+          type: 'error',
+          duration: 2000,
+        });
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -26,8 +31,6 @@ export default {
         console.log(error.request);
         params.vm.$message.error("服务端未响应.");
       }
-      params.vm.$message.error("未知错误.");
-      console.log(error.config);
     });
   },
   adminLoginOut  ({commit}) {
@@ -61,6 +64,7 @@ export default {
       params.vm.$message.error("发现错误.");
     });
   },
+
   addChargeLabel({commit}, params){
     let config = {
       //baseURL: 'https://some-domain.com/api/',
