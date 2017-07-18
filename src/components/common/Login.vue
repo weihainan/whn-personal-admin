@@ -20,6 +20,9 @@
 </template>
 
 <script>
+
+  import {adminLogin} from '../../api/getData'
+
   export default {
     data: function () {
       return {
@@ -40,18 +43,25 @@
     methods: {
       submitForm(formName) {
         const self = this;
-        self.$refs[formName].validate((valid) => {
-          if (valid) {
-            self.$store.dispatch('adminLogin', {data: self.ruleForm, vm: self});
-            setTimeout(function () {
-              if (sessionStorage.getItem('loginedAdmin') != null) {
+        self.$refs[formName].validate(async(valid) => {
+            if (valid) {
+              // self.$store.dispatch('adminLogin', {data: self.ruleForm, vm: self});
+              try {
+                let result = await adminLogin(self.ruleForm);
+                sessionStorage.setItem('loginedAdmin', result);
                 self.$router.push('/home');
+              } catch (error) {
+                self.$message({
+                  showClose: true,
+                  message: error.message,
+                  type: 'error',
+                  duration: 2000,
+                });
+                return false;
               }
-            }.bind(this), 800);
-          } else {
-            return false;
+            }
           }
-        });
+        );
       }
     },
     mounted (){
