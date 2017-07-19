@@ -18,7 +18,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <p></p>
       <template v-if="dataList.total > 0">
         <el-pagination style="float:right;" class="margin-style"
                        layout="total, prev, pager, next, jumper" :total="dataList.total" :page-size="size"

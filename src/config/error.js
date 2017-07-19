@@ -1,5 +1,11 @@
 export default ({vm, result})=> {
   if (result.status == 401) {
+    vm.$message({
+      showClose: true,
+      message: result.data.message,
+      type: 'error',
+      duration: 2000,
+    });
     localStorage.removeItem('loginedAdmin');
     vm.$router.push('/login');
   }
