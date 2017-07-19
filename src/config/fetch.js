@@ -1,10 +1,11 @@
 import fetch from 'isomorphic-fetch'
+import auth from './auth'
 
 const baseUrl = "http://127.0.0.1:9088";
 
-export default async({apiUrl, body, method = 'get', withAuthToken = ''}) => {
+export default async({apiUrl, body, method = 'get', withAuthToken = false}) => {
 
-  const requestUrl = baseUrl + apiUrl;
+  let requestUrl = baseUrl + apiUrl;
 
   const _method = method.toLowerCase()
 
@@ -14,7 +15,8 @@ export default async({apiUrl, body, method = 'get', withAuthToken = ''}) => {
   }
 
   if (withAuthToken) {
-    headers['Authorization'] = withAuthToken;
+    headers['Authorization'] = auth();
+    console.log(auth())
   }
 
   let settings = {
@@ -26,32 +28,28 @@ export default async({apiUrl, body, method = 'get', withAuthToken = ''}) => {
     settings['body'] = JSON.stringify(body)
   }
 
-  // return fetch(requestUrl, settings).then(response => {
-  //   let json = response.json()
-  //   console.log(JSON.stringify(json))
-  //   return json.then(json => {
-  //     return {json, response}
-  //   }).then(({json, response}) => {
-  //     if (!response.ok) {
-  //       return Promise.reject(json)
-  //     }
-  //     return{json, response}
-  //   }).catch(e => {
-  //     if (response.ok) {
-  //       return {}
-  //     } else {
-  //       return Promise.reject(e)
-  //     }
-  //   })
-  // })
+  if (_method === 'get') {
+    let dataStr = ''; //数据拼接字符串
+    Object.keys(body).forEach(key => {
+      dataStr += key + '=' + body[key] + '&';
+    })
 
-  try {
-    const response = await fetch(requestUrl, settings);
-    const responseJson = await response.json();
-    console.log(JSON.stringify(responseJson))
-    return responseJson
-  } catch (error) {
-    throw new Error(error)
+    if (dataStr !== '') {
+      dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
+      requestUrl = requestUrl + '?' + dataStr;
+    }
   }
+  // console.log(JSON.stringify(settings))
+  // console.log(JSON.stringify(requestUrl))
+
+  let result = {};
+  const response = await fetch(requestUrl, settings);
+  const responseJson = await response.json();
+  result['text'] = response.statusText;
+  result['status'] = response.status;
+  result['data'] = responseJson;
+  console.log(JSON.stringify(result))
+  return result;
+
 }
 

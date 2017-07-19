@@ -22,6 +22,7 @@
 <script>
 
   import {adminLogin} from '../../api/getData'
+  import delError from '../../config/error'
 
   export default {
     data: function () {
@@ -46,19 +47,15 @@
         self.$refs[formName].validate(async(valid) => {
             if (valid) {
               // self.$store.dispatch('adminLogin', {data: self.ruleForm, vm: self});
-              try {
-                let result = await adminLogin(self.ruleForm);
-                sessionStorage.setItem('loginedAdmin', result);
+              let result = await adminLogin(self.ruleForm);
+              if (result.status == 200) {
+                localStorage.setItem('loginedAdmin', JSON.stringify(result.data));
                 self.$router.push('/home');
-              } catch (error) {
-                self.$message({
-                  showClose: true,
-                  message: error.message,
-                  type: 'error',
-                  duration: 2000,
-                });
-                return false;
+              } else {
+                delError({vm: self, result: result});
               }
+            } else {
+              return false;
             }
           }
         );
@@ -66,7 +63,7 @@
     },
     mounted (){
       // 检查是否有用户登录 直接到首页
-      let loginedAdmin = sessionStorage.getItem('loginedAdmin');
+      let loginedAdmin = localStorage.getItem('loginedAdmin');
       if (loginedAdmin != null) {
         this.$router.push('/home');
       }

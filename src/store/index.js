@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import mutations from './mutations'
-import actions from './actions'
 
 Vue.use(Vuex);
 
@@ -11,11 +9,15 @@ const state = {
 };
 
 const getters = {
-  getAdmin: (state) => state.loginedAdmin,
-  auth:(state) =>{
-    return state.loginedAdmin.id + '-' + state.loginedAdmin.token;
-  }
+  // getAdmin: (state) => state.loginedAdmin,
+  // auth:(state) =>{
+  //   return state.loginedAdmin.id + '-' + state.loginedAdmin.token;
+  // }
 };
+
+const actions = {}
+
+const mutations = {}
 
 export default new Vuex.Store({
   state,

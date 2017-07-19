@@ -7,9 +7,9 @@
 
     <div id="label_content">
 
-      <el-button type="primary" @click="dialogFormVisible = true">添加标签</el-button>
+      <el-button type="primary" @click="dialogFormVisible = true" class="margin-style">添加标签</el-button>
 
-      <el-table :data="chargeLabelList.items" stripe border>
+      <el-table :data="dataList.items" stripe border>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="mark" label="备注"></el-table-column>
         <el-table-column label="操作">
@@ -19,16 +19,19 @@
         </el-table-column>
       </el-table>
       <p></p>
-      <el-pagination style="float:right;"
-                     layout="total, prev, pager, next, jumper" :total="chargeLabelList.total" :page-size="size"
-                     @current-change="handleCurrentChange"></el-pagination>
+      <template v-if="dataList.total > 0">
+        <el-pagination style="float:right;" class="margin-style"
+                       layout="total, prev, pager, next, jumper" :total="dataList.total" :page-size="size"
+                       @current-change="handleCurrentChange"></el-pagination>
+      </template>
     </div>
+
     <el-dialog title="新账目" :visible.sync="dialogFormVisible">
       <el-form :model="chargeForm" :label-position="labelPosition">
-        <el-form-item label="名称" :label-width="formLabelWidth">
+        <el-form-item label="名称">
           <el-input v-model="empty.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth">
+        <el-form-item label="备注">
           <el-input v-model="empty.mark" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -37,17 +40,23 @@
         <el-button type="primary" @click="submitChargeForm()">确 定</el-button>
       </div>
     </el-dialog>
+
   </div><!-- end wrapper -->
 </template>
 
 <script>
-
-  import {mapState, mapMutations} from 'vuex'
+  import {chargeLabelList, addChargeLabel, deleteChargeLabel} from '../api/getData'
+  import delError from '../config/error'
 
   export default{
     data(){
       let data = {
+        dataList: {
+          items: [],
+          total: 0
+        },
         dialogFormVisible: false,
+        labelPosition: 'right',
         size: 10,
         currentPage: 1,
         empty: {
@@ -59,14 +68,16 @@
     },
     methods: {
       async deleteRow(index) {
-        let row = this.$store.state.chargeLabelList.items[index];
+        let row = this.dataList.items[index];
         if (!row) {
-          this.initData(this.currentPage, this.size);
+          return;
         }
-        await this.$store.dispatch('deleteChargeLabel', {id: row.id, vm: this});
-        setTimeout(function () {
+        let result = await deleteChargeLabel(row.id);
+        if (result.status == 200) {
           this.initData(this.currentPage, this.size);
-        }.bind(this), 600);
+        } else {
+          delError({vm: this, result: result});
+        }
       },
       cancelChargeForm(){
         this.empty = {
@@ -76,22 +87,34 @@
         this.dialogFormVisible = false;
       },
       async submitChargeForm(){
-        await this.$store.dispatch('addChargeLabel', {data: this.empty, vm: this});
+        let result = await addChargeLabel(this.empty);
+        if (result.status == 200) {
+          this.dataList = result.data;
+        } else {
+          delError({vm: this, result: result});
+        }
         this.empty = {
           name: '',
           mark: '',
         };
         this.dialogFormVisible = false;
-        setTimeout(function () {
-          this.initData(this.currentPage, this.size);
-        }.bind(this), 800);
+        this.initData(this.currentPage, this.size);
       },
       handleCurrentChange(page){
         this.currentPage = page;
         this.initData(this.currentPage, this.size)
       },
-      initData(pageValue, sizeValue){
-        this.$store.dispatch('chargeLabelList', {page: pageValue - 1, size: sizeValue, vm: this,});
+      async initData(pageValue, sizeValue){
+        let data = {};
+        data['page'] = pageValue - 1;
+        data['size'] = sizeValue;
+        let result = await chargeLabelList(data);
+        if (result.status == 200) {
+          this.dataList = result.data;
+        } else {
+          delError({vm: this, result: result});
+        }
+        // this.$store.dispatch('chargeLabelList', {page: pageValue - 1, size: sizeValue, vm: this,});
       },
     },
     components: {},
@@ -99,11 +122,7 @@
       // 在这发起后端请求，拿回数据，配合路由钩子做一些事情
       this.initData(this.currentPage, this.size)
     },
-    computed: {
-      ...mapState([
-        'chargeLabelList'
-      ]),
-    },
+    computed: {},
   }
 </script>
 
@@ -111,5 +130,10 @@
 
   #label_content {
     margin-top: 10px;
+  }
+
+  .margin-style {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
 </style>
