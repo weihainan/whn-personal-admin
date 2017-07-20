@@ -11,11 +11,12 @@
         <el-tab-pane label="账目表" name="first">
           <div class="margin-style">
             <el-button type="primary" @click="dialogFormVisible = true">记一笔</el-button>
+            <hr class="vertical-line"/>
             <el-select v-model="selectedMonthAndYear" placeholder="请选择">
-              <el-option v-for="item in yearAndMonthOptions" :key="item.name" :label="item.name"
-                         :value="item.name"></el-option>
+              <el-option v-for="item in yearAndMonthOptions" :key="item.time" :label="item.time"
+                         :value="item.time"></el-option>
             </el-select>
-            <el-button type="primary" @click="alert()">查 询</el-button>
+            <el-button type="primary" @click="searchForList()">查 询</el-button>
           </div>
 
           <el-table :data="dataList.items" stripe border>
@@ -118,7 +119,7 @@
     methods: {
       handleCurrentChange(page){
         this.page = page;
-        this.initDataList(this.page, this.size)
+        this.initDataList(this.page, this.size, this.selectedMonthAndYear)
       },
       cancelChargeForm(){
         this.chargeForm = {
@@ -142,8 +143,12 @@
           mark: '',
           label: ''
         };
-        this.initDataList(this.page, this.size);
+        this.initDataList(this.page, this.size, this.selectedMonthAndYear);
         this.dialogFormVisible = false;
+      },
+
+      async searchForList(){
+        this.initDataList(this.page, this.size, this.selectedMonthAndYear);
       },
 
       async initTypesOptions(){
@@ -161,13 +166,19 @@
         let result = await yearAndMonth(data);
         if (result.status == 200) {
           this.yearAndMonthOptions = result.data;
+          if (this.yearAndMonthOptions.length > 0) {
+            this.yearAndMonthOptions.unshift({time: '-- 请选择 --'});
+          }
         } else {
           delError({vm: this, result: result});
         }
       },
 
-      async initDataList(page, size){
+      async initDataList(page, size, yearAndMonth){
         let data = {page: page, size: size};
+        if (yearAndMonth && yearAndMonth !== '-- 请选择 --') {
+          data['year_and_month'] = yearAndMonth;
+        }
         let result = await listCharges(data);
         if (result.status == 200) {
           this.dataList = result.data;
@@ -180,7 +191,7 @@
       // 在这发起后端请求，拿回数据，配合路由钩子做一些事情
       this.initTypesOptions();
       this.initYearAndMonthOptions();
-      this.initDataList(this.page, this.size);
+      this.initDataList(this.page, this.size, this.selectedMonthAndYear);
     },
   }
 </script>
@@ -194,5 +205,15 @@
   .margin-style {
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+
+  .vertical-line {
+    height: 40px;
+    width: 1px;
+    border-right: 1px;
+    color: #D5D5D5;
+    margin-left: 10px;
+    margin-right: 12px;
+    display: inline;
   }
 </style>
