@@ -138,7 +138,6 @@
       },
 
       async deleteRow(id){
-        alert(id)
         let result = await deleteCharge(id);
         if (result.status == 200) {
           this.dataList = result.data;

@@ -11,8 +11,12 @@
         <el-tab-pane label="账目表" name="first">
           <chargeTable></chargeTable>
         </el-tab-pane>
-        <el-tab-pane label="时间轴" name="second">时间轴</el-tab-pane>
-        <el-tab-pane label="报表" name="third">报表</el-tab-pane>
+        <el-tab-pane label="时间轴" name="second">
+          <chargeTimeLine></chargeTimeLine>
+        </el-tab-pane>
+        <el-tab-pane label="报表" name="third">
+          <chargeStatistics></chargeStatistics>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -21,6 +25,8 @@
 <script>
 
   import chargeTable from './internal/ChargeTable.vue'
+  import chargeTimeLine from './internal/ChargeTimeLIne.vue'
+  import chargeStatistics from './internal/chargeStatistics.vue'
 
   export default{
     data(){
@@ -29,7 +35,9 @@
       }
     },
     components: {
-      chargeTable: chargeTable
+      chargeTable: chargeTable,
+      chargeTimeLine: chargeTimeLine,
+      chargeStatistics: chargeStatistics,
     }
   }
 </script>
