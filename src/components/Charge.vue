@@ -7,12 +7,12 @@
     </el-breadcrumb>
 
     <div class="main">
-      <el-tabs v-model="activeName" type="card">
+      <el-tabs v-model="activeName" type="card" @tab-click="ontabClick">
         <el-tab-pane label="账目表" name="first">
           <chargeTable></chargeTable>
         </el-tab-pane>
         <el-tab-pane label="时间轴" name="second">
-          <chargeTimeLine></chargeTimeLine>
+          <chargeTimeLine :date="currentDate"></chargeTimeLine>
         </el-tab-pane>
         <el-tab-pane label="报表" name="third">
           <chargeStatistics></chargeStatistics>
@@ -31,6 +31,7 @@
   export default{
     data(){
       return {
+        currentDate: new Date(),
         activeName: 'first',
       }
     },
@@ -38,6 +39,11 @@
       chargeTable: chargeTable,
       chargeTimeLine: chargeTimeLine,
       chargeStatistics: chargeStatistics,
+    },
+    methods: {
+      ontabClick(event){
+        this.currentDate = new Date()
+      }
     }
   }
 </script>

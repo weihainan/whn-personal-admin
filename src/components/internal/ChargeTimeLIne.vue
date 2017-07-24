@@ -34,6 +34,9 @@
       };
       return data;
     },
+    props: {
+      date: Date
+    },
     methods: {
       async initDataList(page, size){
         let data = {page: page, size: size};
@@ -49,7 +52,7 @@
     mounted(){
       // 在这发起后端请求，拿回数据，配合路由钩子做一些事情
       this.initDataList(this.page, this.size);
-    }
+    },
   }
 </script>
 
