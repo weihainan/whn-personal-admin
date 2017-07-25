@@ -46,12 +46,19 @@
         } else {
           delError({vm: this, result: result});
         }
+      },
+      init(curVal, oldVal){
+        alert(1)
+        this.initDataList(this.page, this.size);
       }
     },
     components: {},
     mounted(){
       // 在这发起后端请求，拿回数据，配合路由钩子做一些事情
       this.initDataList(this.page, this.size);
+    },
+    watch: {
+      date: 'init',
     },
   }
 </script>
